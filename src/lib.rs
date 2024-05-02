@@ -79,26 +79,28 @@ pub enum OpenApiSource<S: Into<String>> {
 }
 
 #[derive(Debug, Clone)]
-pub struct ApiDefinition<S: Into<String>> {
+pub struct ApiDefinition<S: Into<String> + Clone> {
     pub uri_prefix: S,
     pub api_definition: OpenApiSource<S>,
     pub title: Option<S>,
 }
 
-pub fn generate_routes<S: Into<String>>(def: ApiDefinition<S>) -> Router {
+pub fn generate_routes<S: Into<String> + Clone>(def: ApiDefinition<S>) -> Router {
     let prefix = def.uri_prefix.into();
     let prefix2 = format!("{prefix}/");
+    let def2 = def.api_definition.clone();
     let api_def = match def.api_definition {
         OpenApiSource::Uri(val) => val.into(),
-        OpenApiSource::Inline(val) => val.into(),
+        OpenApiSource::Inline(val) => format!("{prefix}/openapi.yml"),
     };
     let api_def2 = api_def.clone();
+    let api_def3 = api_def.clone();
     let title = match def.title {
         Some(val) => val.into(),
         None => "SwaggerUI".to_string(),
     };
     let title2 = title.clone();
-    Router::new()
+    let mut router = Router::new()
         .route(
             &prefix,
             get(|req: Request| async move { serve_index(api_def, title, req).await }),
@@ -113,5 +115,10 @@ pub fn generate_routes<S: Into<String>>(def: ApiDefinition<S>) -> Router {
         .route(
             &format!("{prefix}/swagger-ui-bundle.js.map"),
             get(serve_js_map),
-        )
+        );
+    if let OpenApiSource::Inline(source) = def2 {
+        let yaml = source.into();
+        router = router.route(&api_def3, get(|| async { yaml }));
+    }
+    router
 }
