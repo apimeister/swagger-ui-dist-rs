@@ -1,11 +1,11 @@
 use axum::Router;
-use swagger_ui_dist::ApiDefinition;
+use swagger_ui_dist::{ApiDefinition, OpenApiSource};
 
 #[tokio::test]
 async fn run_server() {
     let api_def = ApiDefinition {
         uri_prefix: "/api",
-        uri_api_definition: "/openapi.yml",
+        api_definition: OpenApiSource::Uri("/openapi.yml"),
         title: Some("My Super Duper API"),
     };
     let app = Router::new().merge(swagger_ui_dist::generate_routes(api_def));

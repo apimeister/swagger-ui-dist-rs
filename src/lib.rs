@@ -69,24 +69,43 @@ async fn serve_css_map() -> Response {
         .unwrap()
 }
 
-#[derive(Default, Debug)]
+/// Provide the OpenAPi Spec either Inline or as Url
+#[derive(Debug, Clone)]
+pub enum OpenApiSource<S: Into<String>> {
+    /// generates the OpenAPI location at {uri_prefix}/openapi.yml
+    Inline(S),
+    /// uses the given the OpenAPI location
+    Uri(S),
+}
+
+#[derive(Debug, Clone)]
 pub struct ApiDefinition<S: Into<String>> {
     pub uri_prefix: S,
-    pub uri_api_definition: S,
+    pub api_definition: OpenApiSource<S>,
     pub title: Option<S>,
 }
 
 pub fn generate_routes<S: Into<String>>(def: ApiDefinition<S>) -> Router {
     let prefix = def.uri_prefix.into();
-    let api_def = def.uri_api_definition.into();
+    let prefix2 = format!("{prefix}/");
+    let api_def = match def.api_definition {
+        OpenApiSource::Uri(val) => val.into(),
+        OpenApiSource::Inline(val) => val.into(),
+    };
+    let api_def2 = api_def.clone();
     let title = match def.title {
         Some(val) => val.into(),
         None => "SwaggerUI".to_string(),
     };
+    let title2 = title.clone();
     Router::new()
         .route(
             &prefix,
             get(|req: Request| async move { serve_index(api_def, title, req).await }),
+        )
+        .route(
+            &prefix2,
+            get(|req: Request| async move { serve_index(api_def2, title2, req).await }),
         )
         .route(&format!("{prefix}/swagger-ui.css"), get(serve_css))
         .route(&format!("{prefix}/swagger-ui-bundle.js"), get(serve_js))
