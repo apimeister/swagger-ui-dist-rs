@@ -1,0 +1,12 @@
+[package]
+name = "swagger-ui-dist"
+version = "5.17.2"
+edition = "2021"
+
+[dependencies]
+axum-core = "0.4"
+axum = "0.7"
+
+[dev-dependencies]
+tokio = { version = "1", features = ["full"] }
+reqwest = "0.12"

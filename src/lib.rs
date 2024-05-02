@@ -1,0 +1,98 @@
+use axum::{routing::get, Router};
+use axum_core::{body::Body, extract::Request, response::Response};
+
+async fn serve_index(api_def: String, title: String, req: Request) -> Response {
+    let uri = req.uri();
+    let response_str = format!(
+        r#"<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <link rel="stylesheet" href="{uri}/swagger-ui.css" />
+</head>
+<body>
+<div id="swagger-ui"></div>
+<script src="{uri}/swagger-ui-bundle.js" crossorigin></script>
+<script>
+    window.onload = () => {{
+    window.ui = SwaggerUIBundle({{
+        url: '{api_def}',
+        dom_id: '#swagger-ui',
+    }});
+    }};
+</script>
+</body>
+</html>"#
+    );
+    Response::builder()
+        .status(200)
+        .header("Content-Type", "text/html")
+        .body(Body::from(response_str))
+        .unwrap()
+}
+
+async fn serve_js() -> Response {
+    let js: &str = include_str!("../assets/swagger-ui-bundle.js");
+    Response::builder()
+        .status(200)
+        .header("Content-Type", "text/javascript")
+        .body(Body::from(js))
+        .unwrap()
+}
+
+async fn serve_js_map() -> Response {
+    let js: &str = include_str!("../assets/swagger-ui-bundle.js.map");
+    Response::builder()
+        .status(200)
+        .header("Content-Type", "application/json")
+        .body(Body::from(js))
+        .unwrap()
+}
+
+async fn serve_css() -> Response {
+    let css: &str = include_str!("../assets/swagger-ui.css");
+    Response::builder()
+        .status(200)
+        .header("Content-Type", "text/css")
+        .body(Body::from(css))
+        .unwrap()
+}
+
+async fn serve_css_map() -> Response {
+    let js: &str = include_str!("../assets/swagger-ui.css.map");
+    Response::builder()
+        .status(200)
+        .header("Content-Type", "application/json")
+        .body(Body::from(js))
+        .unwrap()
+}
+
+#[derive(Default, Debug)]
+pub struct ApiDefinition<S: Into<String>> {
+    pub uri_prefix: S,
+    pub uri_api_definition: S,
+    pub title: Option<S>,
+}
+
+pub fn generate_routes<S: Into<String>>(def: ApiDefinition<S>) -> Router {
+    let prefix = def.uri_prefix.into();
+    let api_def = def.uri_api_definition.into();
+    let title = match def.title {
+        Some(val) => val.into(),
+        None => "SwaggerUI".to_string(),
+    };
+    Router::new()
+        .route(
+            &prefix,
+            get(|req: Request| async move { serve_index(api_def, title, req).await }),
+        )
+        .route(&format!("{prefix}/swagger-ui.css"), get(serve_css))
+        .route(&format!("{prefix}/swagger-ui-bundle.js"), get(serve_js))
+        .route(&format!("{prefix}/swagger-ui.css.map"), get(serve_css_map))
+        .route(
+            &format!("{prefix}/swagger-ui-bundle.js.map"),
+            get(serve_js_map),
+        )
+}
