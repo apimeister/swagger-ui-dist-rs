@@ -48,6 +48,7 @@ jobs:
       if: env.CRATE_VERSION != env.SWAGGER_VERSION
       with:
         commit_message: Version bump.
+        file_pattern: 'Cargo.* assets/*'
     # - run: cargo publish
     #   if: env.CRATE_VERSION != env.SWAGGER_VERSION
     #   env:
