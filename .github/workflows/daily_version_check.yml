@@ -30,13 +30,13 @@ jobs:
         cat Cargo.toml
     - name: Replace assets
       run: |
-        curl "https://raw.githubusercontent.com/swagger-api/swagger-ui/v${SWAGGER_VERSION}/dist/swagger-ui-bundle.js -o assets/swagger-ui-bundle.js
+        curl "https://raw.githubusercontent.com/swagger-api/swagger-ui/v${SWAGGER_VERSION}/dist/swagger-ui-bundle.js" -o assets/swagger-ui-bundle.js
         echo "got swagger-ui-bundle.js"
-        curl "https://raw.githubusercontent.com/swagger-api/swagger-ui/v${SWAGGER_VERSION}/dist/swagger-ui-bundle.js.map -o assets/swagger-ui-bundle.js.map
+        curl "https://raw.githubusercontent.com/swagger-api/swagger-ui/v${SWAGGER_VERSION}/dist/swagger-ui-bundle.js.map" -o assets/swagger-ui-bundle.js.map
         echo "got swagger-ui-bundle.js.map"
-        curl "https://raw.githubusercontent.com/swagger-api/swagger-ui/v${SWAGGER_VERSION}/dist/swagger-ui.css -o assets/swagger-ui.css
+        curl "https://raw.githubusercontent.com/swagger-api/swagger-ui/v${SWAGGER_VERSION}/dist/swagger-ui.css" -o assets/swagger-ui.css
         echo "got swagger-ui.css"
-        curl "https://raw.githubusercontent.com/swagger-api/swagger-ui/v${SWAGGER_VERSION}/dist/swagger-ui.css.map -o assets/swagger-ui.css.map
+        curl "https://raw.githubusercontent.com/swagger-api/swagger-ui/v${SWAGGER_VERSION}/dist/swagger-ui.css.map" -o assets/swagger-ui.css.map
         echo "got swagger-ui.css.map"
     - name: Build artifact
       if: env.CRATE_VERSION != env.SWAGGER_VERSION
