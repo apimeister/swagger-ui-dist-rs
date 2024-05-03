@@ -39,11 +39,11 @@ jobs:
         curl "https://raw.githubusercontent.com/swagger-api/swagger-ui/v${SWAGGER_VERSION}/dist/swagger-ui.css.map" -o assets/swagger-ui.css.map
         echo "got swagger-ui.css.map"
         ls -lisat assets
+    - uses: actions-rust-lang/setup-rust-toolchain@v1
+      if: env.CRATE_VERSION != env.SWAGGER_VERSION
     - name: Build artifact
       if: env.CRATE_VERSION != env.SWAGGER_VERSION
-      uses: actions-rs/cargo@v1
-      with:
-        command: build
+      run: cargo build
     - uses: stefanzweifel/git-auto-commit-action@v5
       if: env.CRATE_VERSION != env.SWAGGER_VERSION
       with:
