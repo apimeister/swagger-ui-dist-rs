@@ -91,7 +91,7 @@ pub fn generate_routes<S: Into<String> + Clone>(def: ApiDefinition<S>) -> Router
     let def2 = def.api_definition.clone();
     let api_def = match def.api_definition {
         OpenApiSource::Uri(val) => val.into(),
-        OpenApiSource::Inline(val) => format!("{prefix}/openapi.yml"),
+        OpenApiSource::Inline(_val) => format!("{prefix}/openapi.yml"),
     };
     let api_def2 = api_def.clone();
     let api_def3 = api_def.clone();
