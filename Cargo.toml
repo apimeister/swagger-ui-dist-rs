@@ -1,6 +1,6 @@
 [package]
 name = "swagger-ui-dist"
-version = "5.17.5"
+version = "5.17.6"
 edition = "2021"
 
 [dependencies]
