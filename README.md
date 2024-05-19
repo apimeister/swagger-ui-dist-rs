@@ -1,5 +1,7 @@
 [![Latest Version](https://img.shields.io/crates/v/swagger-ui-dist.svg)](https://crates.io/crates/swagger-ui-dist)
 
+The version number reflects the swagger-ui version embedded.
+
 ## Usage
 
 ### With Inline OpenAPI
