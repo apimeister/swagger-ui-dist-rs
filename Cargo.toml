@@ -1,7 +1,12 @@
 [package]
 name = "swagger-ui-dist"
+description ="packages the JS/CSS code of the swagger-ui in the form of axum routes"
 version = "5.17.10"
 edition = "2021"
+authors = ["Jens Walter <jens@apimeister.com>"]
+license = "Apache-2.0"
+repository = "https://github.com/apimeister/swagger-ui-dist-rs/"
+documentation = "https://docs.rs/swagger-ui-dist"
 
 [dependencies]
 axum-core = "0.4"

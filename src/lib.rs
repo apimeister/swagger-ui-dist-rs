@@ -1,3 +1,8 @@
+#![deny(missing_docs)]
+//! swagger-ui-dist redistributes the swagger ui
+//!
+//! it repackages the JS/CSS code into axum routes
+//! to allow for an easier implementation
 use axum::{routing::get, Router};
 use axum_core::{body::Body, extract::Request, response::Response};
 
@@ -72,26 +77,39 @@ async fn serve_css_map() -> Response {
 /// Provide the OpenAPi Spec either Inline or as Url
 #[derive(Debug, Clone)]
 pub enum OpenApiSource<S: Into<String>> {
-    /// generates the OpenAPI location at {uri_prefix}/openapi.yml
+    /// generates the OpenAPI location at {uri_prefix}/openapi.yaml
     Inline(S),
+    /// generates the OpenAPI location at the given URI
+    InlineWithName {
+        /// OpenAPI definition as String
+        definition: S,
+        /// OpenAPI URI that is used to expose the definition
+        uri: S,
+    },
     /// uses the given the OpenAPI location
     Uri(S),
 }
 
+/// Configuration for the API definition
 #[derive(Debug, Clone)]
 pub struct ApiDefinition<S: Into<String> + Clone> {
+    /// URI prefix used for all Axum routes
     pub uri_prefix: S,
+    /// OpenAPI definition given, either inline of as URL reference
     pub api_definition: OpenApiSource<S>,
+    /// Optional title of the API, defaults to SwaggerUI
     pub title: Option<S>,
 }
 
+/// Generate the route for Axum depending on the given configuration
 pub fn generate_routes<S: Into<String> + Clone>(def: ApiDefinition<S>) -> Router {
     let prefix = def.uri_prefix.into();
     let prefix2 = format!("{prefix}/");
     let def2 = def.api_definition.clone();
     let api_def = match def.api_definition {
         OpenApiSource::Uri(val) => val.into(),
-        OpenApiSource::Inline(_val) => format!("{prefix}/openapi.yml"),
+        OpenApiSource::Inline(_val) => format!("{prefix}/openapi.yaml"),
+        OpenApiSource::InlineWithName { definition: _, uri } => uri.into(),
     };
     let api_def2 = api_def.clone();
     let api_def3 = api_def.clone();
@@ -118,6 +136,9 @@ pub fn generate_routes<S: Into<String> + Clone>(def: ApiDefinition<S>) -> Router
         );
     if let OpenApiSource::Inline(source) = def2 {
         let yaml = source.into();
+        router = router.route(&api_def3, get(|| async { yaml }));
+    } else if let OpenApiSource::InlineWithName { definition, uri: _ } = def2 {
+        let yaml = definition.into();
         router = router.route(&api_def3, get(|| async { yaml }));
     }
     router
