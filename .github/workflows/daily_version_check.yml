@@ -49,7 +49,7 @@ jobs:
       with:
         commit_message: Version bump.
         file_pattern: 'Cargo.* assets/*'
-    # - run: cargo publish
-    #   if: env.CRATE_VERSION != env.SWAGGER_VERSION
-    #   env:
-    #     CARGO_REGISTRY_TOKEN: ${{secrets.CARGO_REGISTRY_TOKEN}}
+    - run: cargo publish
+      if: env.CRATE_VERSION != env.SWAGGER_VERSION
+      env:
+        CARGO_REGISTRY_TOKEN: ${{secrets.CARGO_REGISTRY_TOKEN}}
