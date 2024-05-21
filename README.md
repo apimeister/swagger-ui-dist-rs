@@ -5,7 +5,8 @@ The version number reflects the swagger-ui version embedded.
 ## Usage
 
 ### With Inline OpenAPI
-```
+
+```rust
 use axum::Router;
 use swagger_ui_dist::{ApiDefinition, OpenApiSource};
 
@@ -25,7 +26,7 @@ async fn main() {
 
 ### With external Route
 
-```
+```rust
 use axum::{routing::get, Router};
 use swagger_ui_dist::{ApiDefinition, OpenApiSource};
 
