@@ -45,3 +45,22 @@ async fn main() {
     axum::serve(listener, app).await.unwrap();
 }
 ```
+
+### Supporting axum 0.7 and 0.8
+
+Since axum 0.8 hase breaking changes, the crate supports both axum 0.7 and 0.8. By default, the crate uses the latest axum.
+
+To use axum 0.7, add the following to your `Cargo.toml`:
+
+```toml
+[dependencies]
+swagger-ui-dist = { version = "5.18.2", default-features = false, features = ["with-axum-07"] }
+```
+
+To use axum 0.8, add the following to your `Cargo.toml`:
+
+```toml
+[dependencies]
+swagger-ui-dist = { version = "5.18.2" }
+```
+

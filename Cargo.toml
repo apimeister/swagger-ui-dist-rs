@@ -8,9 +8,21 @@ license = "Apache-2.0"
 repository = "https://github.com/apimeister/swagger-ui-dist-rs/"
 documentation = "https://docs.rs/swagger-ui-dist"
 
+[features]
+default = ["axum-08", "axum-core-05"]
+with-axum-07 = ["axum-07", "axum-core-04"]
+with-axum-08 = ["axum-08", "axum-core-05"]
+
 [dependencies]
-axum-core = "0.4"
-axum = "0.7"
+axum-07 = { version = "0.7", package = "axum", features = [
+    "macros",
+], optional = true }
+axum-08 = { version = "0.8", package = "axum", features = [
+    "macros",
+], optional = true }
+axum-core-04 = { version = "0.4", package = "axum-core", optional = true }
+axum-core-05 = { version = "0.5", package = "axum-core", optional = true }
+
 
 [dev-dependencies]
 tokio = { version = "1", features = ["full"] }

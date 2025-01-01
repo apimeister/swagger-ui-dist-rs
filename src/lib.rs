@@ -15,6 +15,14 @@
 //! println!("listening on http://localhost:3000/api");
 //! axum::serve(listener, app).await.unwrap();
 //! ```
+#[cfg(feature = "axum-07")]
+use axum_07 as axum;
+#[cfg(feature = "axum-08")]
+use axum_08 as axum;
+#[cfg(feature = "axum-07")]
+use axum_core_04 as axum_core;
+#[cfg(feature = "axum-08")]
+use axum_core_05 as axum_core;
 use axum::{routing::get, Router};
 use axum_core::{body::Body, extract::Request, response::Response};
 
