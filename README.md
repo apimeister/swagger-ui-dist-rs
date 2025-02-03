@@ -48,7 +48,7 @@ async fn main() {
 
 ### Supporting axum 0.7 and 0.8
 
-Since axum 0.8 hase breaking changes, the crate supports both axum 0.7 and 0.8. By default, the crate uses the latest axum.
+Since axum 0.8 has breaking changes, this crate supports both axum 0.7 and 0.8. By default, the crate uses the latest axum.
 
 To use axum 0.7, add the following to your `Cargo.toml`:
 
