@@ -4,7 +4,7 @@ The version number reflects the swagger-ui version embedded.
 
 ## Usage
 
-This crate can either be used with `axum` or `axtix`. You can enbale/disable the implementations through feature flags.
+This crate can either be used with `axum` or `actix`. You can enable/disable the implementations through feature flags.
 
 **For Axum 0.8 (which is the default)**
 
