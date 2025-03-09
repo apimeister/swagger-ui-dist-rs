@@ -41,9 +41,18 @@ jobs:
         ls -lisat assets
     - uses: actions-rust-lang/setup-rust-toolchain@v1
       if: env.CRATE_VERSION != env.SWAGGER_VERSION
-    - name: Build artifact
+    - name: Build artifact default
       if: env.CRATE_VERSION != env.SWAGGER_VERSION
       run: cargo build
+    - name: Build artifact axum-07
+      if: env.CRATE_VERSION != env.SWAGGER_VERSION
+      run: cargo build --no-default-features --features with-axum-07
+    - name: Build artifact axum-08
+      if: env.CRATE_VERSION != env.SWAGGER_VERSION
+      run: cargo build --no-default-features --features with-axum-08
+    - name: Build artifact actix
+      if: env.CRATE_VERSION != env.SWAGGER_VERSION
+      run: cargo build --no-default-features --features with-actix
     - uses: stefanzweifel/git-auto-commit-action@v5
       if: env.CRATE_VERSION != env.SWAGGER_VERSION
       with:

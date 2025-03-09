@@ -4,6 +4,34 @@ The version number reflects the swagger-ui version embedded.
 
 ## Usage
 
+This crate can either be used with `axum` or `axtix`. You can enbale/disable the implementations through feature flags.
+
+**For Axum 0.8 (which is the default)**
+
+Cargo.toml
+```toml
+[dependencies]
+swagger-ui-dist = "*"
+```
+
+**For Axum 0.7**
+
+Cargo.toml
+```toml
+[dependencies]
+swagger-ui-dist = { version = "*", default-features = false, features = ["with-axum-07"] }
+```
+
+**For Actix**
+
+Cargo.toml
+```toml
+[dependencies]
+swagger-ui-dist = { version = "*", default-features = false, features = ["with-actix"] }
+```
+
+## Implementation
+
 ### With Inline OpenAPI
 
 ```rust
@@ -46,21 +74,37 @@ async fn main() {
 }
 ```
 
-### Supporting axum 0.7 and 0.8
+## Actix Sample use
 
-Since axum 0.8 has breaking changes, this crate supports both axum 0.7 and 0.8. By default, the crate uses the latest axum.
+```rust
+use actix_web::{web, App, HttpResponse, HttpServer, Responder};
+use swagger_ui_dist::{generate_scope, ApiDefinition, OpenApiSource};
 
-To use axum 0.7, add the following to your `Cargo.toml`:
+async fn hello() -> impl Responder {
+    HttpResponse::Ok().body("Hello world!")
+}
 
-```toml
-[dependencies]
-swagger-ui-dist = { version = "5.18.2", default-features = false, features = ["with-axum-07"] }
+#[actix_web::main]
+async fn main() -> std::io::Result<()> {
+    let api_def = ApiDefinition {
+        uri_prefix: "/api".to_string(),
+        api_definition: OpenApiSource::Inline(include_str!("petstore.yaml").to_string()),
+        title: Some("My Super Duper API".to_string()),
+    };
+
+    println!("listening on http://localhost:8080/api/");
+
+    HttpServer::new(move || {
+        App::new()
+            .service(web::scope("/").route("", web::get().to(hello)))
+            .service(generate_scope(api_def.clone()))
+    })
+    .bind(("127.0.0.1", 8080))?
+    .run()
+    .await
+}
 ```
 
-To use axum 0.8, add the following to your `Cargo.toml`:
+## Examples
 
-```toml
-[dependencies]
-swagger-ui-dist = { version = "5.18.2" }
-```
-
+More example are available through the `examples` in the repository.

@@ -1,7 +1,7 @@
 [package]
 name = "swagger-ui-dist"
 description = "packages the JS/CSS code of the swagger-ui in the form of axum routes"
-version = "5.20.0"
+version = "5.20.1-preview"
 edition = "2021"
 authors = ["Jens Walter <jens@apimeister.com>"]
 license = "Apache-2.0"
@@ -9,20 +9,32 @@ repository = "https://github.com/apimeister/swagger-ui-dist-rs/"
 documentation = "https://docs.rs/swagger-ui-dist"
 
 [features]
-default = ["axum-08", "axum-core-05"]
+default = ["with-axum-08"]
 with-axum-07 = ["axum-07", "axum-core-04"]
 with-axum-08 = ["axum-08", "axum-core-05"]
+with-actix = ["actix-web"]
 
 [dependencies]
+# Axum 0.7.x dependencies
 axum-07 = { version = "0.7", package = "axum", features = [
     "macros",
 ], optional = true }
+axum-core-04 = { version = "0.4", package = "axum-core", optional = true }
+
+# Axum 0.8.x dependencies
 axum-08 = { version = "0.8", package = "axum", features = [
     "macros",
 ], optional = true }
-axum-core-04 = { version = "0.4", package = "axum-core", optional = true }
 axum-core-05 = { version = "0.5", package = "axum-core", optional = true }
+
+# Actix dependencies
+actix-web = { version = "4", optional = true }
 
 [dev-dependencies]
 tokio = { version = "1", features = ["full"] }
 reqwest = "0.12"
+
+[[example]]
+name = "actix"
+path = "examples/actix.rs"
+required-features = ["with-actix"]

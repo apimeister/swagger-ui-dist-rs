@@ -1,8 +1,8 @@
+use axum::Router;
 #[cfg(feature = "axum-07")]
 use axum_07 as axum;
 #[cfg(feature = "axum-08")]
 use axum_08 as axum;
-use axum::Router;
 use swagger_ui_dist::{ApiDefinition, OpenApiSource};
 
 #[tokio::main]
