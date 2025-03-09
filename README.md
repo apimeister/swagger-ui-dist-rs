@@ -107,4 +107,4 @@ async fn main() -> std::io::Result<()> {
 
 ## Examples
 
-More example are available through the `examples` in the repository.
+More examples are available through the `examples`-directory in the repository.
