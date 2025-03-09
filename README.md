@@ -1,5 +1,6 @@
 [![Latest Version](https://img.shields.io/crates/v/swagger-ui-dist.svg)](https://crates.io/crates/swagger-ui-dist)
 
+This crate packages the swagger-ui from https://github.com/swagger-api/swagger-ui/.
 The version number reflects the swagger-ui version embedded.
 
 ## Usage
