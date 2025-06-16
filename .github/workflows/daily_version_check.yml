@@ -53,7 +53,7 @@ jobs:
     - name: Build artifact actix
       if: env.CRATE_VERSION != env.SWAGGER_VERSION
       run: cargo build --no-default-features --features with-actix
-    - uses: stefanzweifel/git-auto-commit-action@v5
+    - uses: stefanzweifel/git-auto-commit-action@v6
       if: env.CRATE_VERSION != env.SWAGGER_VERSION
       with:
         commit_message: Version bump.
