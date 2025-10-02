@@ -150,6 +150,38 @@ async fn serve_css_map_actix() -> impl Responder {
     HttpResponse::Ok().content_type("application/json").body(js)
 }
 
+#[cfg(any(feature = "axum-07", feature = "axum-08"))]
+async fn serve_oauth2_redirect_html_axum() -> Response {
+    let js: &str = include_str!("../assets/oauth2-redirect.html");
+    Response::builder()
+        .status(200)
+        .header("Content-Type", "text/html")
+        .body(Body::from(js))
+        .unwrap()
+}
+
+#[cfg(feature = "actix-web")]
+async fn serve_oauth2_redirect_html_actix() -> impl Responder {
+    let js: &str = include_str!("../assets/oauth2-redirect.html");
+    HttpResponse::Ok().content_type("text/html").body(js)
+}
+
+#[cfg(any(feature = "axum-07", feature = "axum-08"))]
+async fn serve_oauth2_redirect_js_axum() -> Response {
+    let js: &str = include_str!("../assets/oauth2-redirect.js");
+    Response::builder()
+        .status(200)
+        .header("Content-Type", "text/javascript")
+        .body(Body::from(js))
+        .unwrap()
+}
+
+#[cfg(feature = "actix-web")]
+async fn serve_oauth2_redirect_js_actix() -> impl Responder {
+    let js: &str = include_str!("../assets/oauth2-redirect.js");
+    HttpResponse::Ok().content_type("text/javascript").body(js)
+}
+
 /// Provide the OpenAPi Spec either Inline or as Url
 #[derive(Debug, Clone)]
 pub enum OpenApiSource<S: Into<String>> {
@@ -216,6 +248,14 @@ pub fn generate_routes<S: Into<String> + Clone>(def: ApiDefinition<S>) -> Router
         .route(
             &format!("{prefix}/swagger-ui-bundle.js.map"),
             get(serve_js_map_axum),
+        )
+        .route(
+            &format!("{prefix}/oauth2-redirect.html"),
+            get(serve_oauth2_redirect_html_axum),
+        )
+        .route(
+            &format!("{prefix}/oauth2-redirect.js"),
+            get(serve_oauth2_redirect_js_axum),
         );
     if let OpenApiSource::Inline(source) = def2 {
         let yaml = source.into();
@@ -268,6 +308,14 @@ pub fn generate_scope<S: Into<String> + Clone>(def: ApiDefinition<S>) -> impl Ht
         .route(
             "/swagger-ui-bundle.js.map",
             web::get().to(serve_js_map_actix),
+        )
+        .route(
+            "/oauth2-redirect.html",
+            web::get().to(serve_oauth2_redirect_html_actix),
+        )
+        .route(
+            "/oauth2-redirect.js",
+            web::get().to(serve_oauth2_redirect_js_actix),
         )
         .route(
             uri.trim_start_matches(prefix.as_str()),

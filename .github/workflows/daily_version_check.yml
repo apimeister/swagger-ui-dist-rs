@@ -38,6 +38,10 @@ jobs:
         echo "got swagger-ui.css"
         curl "https://raw.githubusercontent.com/swagger-api/swagger-ui/v${SWAGGER_VERSION}/dist/swagger-ui.css.map" -o assets/swagger-ui.css.map
         echo "got swagger-ui.css.map"
+        curl "https://raw.githubusercontent.com/swagger-api/swagger-ui/v${SWAGGER_VERSION}/dist/oauth2-redirect.html" -o assets/oauth2-redirect.html
+        echo "got oauth2-redirect.html"
+        curl "https://raw.githubusercontent.com/swagger-api/swagger-ui/v${SWAGGER_VERSION}/dist/oauth2-redirect.js" -o assets/oauth2-redirect.js
+        echo "got oauth2-redirect.js"
         ls -lisat assets
     - uses: actions-rust-lang/setup-rust-toolchain@v1
       if: env.CRATE_VERSION != env.SWAGGER_VERSION
