@@ -9,7 +9,7 @@ jobs:
       contents: write
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v5
+    - uses: actions/checkout@v6
     - name: get swagger-ui-dist version
       run: |
         VERSION=`curl -L -H "Accept: application/vnd.github+json" -H "X-GitHub-Api-Version: 2022-11-28" 'https://api.github.com/repos/swagger-api/swagger-ui/releases?per_page=1' | jq -r '.[].tag_name'`
